@@ -1,11 +1,14 @@
 package com.artem.app.ui.fragments.posts;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.artem.app.adapters.PostAdapter;
 import com.artem.app.api.ApiApp;
 import com.artem.app.api.RetrofitFactory;
 import com.artem.app.api.models.PostModel;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -24,17 +27,18 @@ public class PostPresenter implements PostContract.Presenter {
         api = RetrofitFactory.getInstance().create("http://45.156.22.39:5000");
         adapter = new PostAdapter();
 
-        api.getPost().enqueue(new Callback<List<PostModel>>() {
+        api.getPost().enqueue(new Callback<Object>() {
             @Override
-            public void onResponse(@NonNull Call<List<PostModel>> call, @NonNull Response<List<PostModel>> response) {
-                if (response.body() != null)
-                    adapter.setPosts(response.body());
-                else
-                    _view.toast("Error load");
+            public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
+//                if (response.body() != null)
+                    Log.e("TAG_RESPONSE", new Gson().toJson(response.body()) );
+//                    adapter.setPosts(response.body());
+//                else
+//                    _view.toast("Error load");
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<PostModel>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
                 _view.toast(t.getMessage());
             }
         });

@@ -8,6 +8,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface ApiApp {
@@ -20,6 +21,6 @@ public interface ApiApp {
     @POST("/add/post")
     Call<StatusModel> sendPost(@Body PostModel model);
 
-    @POST("/get/tours")
+    @GET("/get/tours")
     Call<List<PostModel>> getPost();
 }
