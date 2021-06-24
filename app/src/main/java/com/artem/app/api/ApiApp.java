@@ -1,6 +1,7 @@
 package com.artem.app.api;
 
 import com.artem.app.api.models.PostModel;
+import com.artem.app.api.models.PostsModel;
 import com.artem.app.api.models.RegLoginModel;
 import com.artem.app.api.models.StatusModel;
 
@@ -22,5 +23,5 @@ public interface ApiApp {
     Call<StatusModel> sendPost(@Body PostModel model);
 
     @GET("/get/tours")
-    Call<List<PostModel>> getPost();
+    Call<PostsModel> getPost();
 }

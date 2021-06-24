@@ -41,6 +41,8 @@ public class PostView extends FragmentBase<FragmentPostsBinding> implements Post
         getBinding().setEvent(presenter);
         getBinding().rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         getBinding().rvPosts.setAdapter(presenter.getAdapter());
+
+        getBinding().swipe.setOnRefreshListener(presenter);
     }
 
     @Override
@@ -77,5 +79,10 @@ public class PostView extends FragmentBase<FragmentPostsBinding> implements Post
     public void logout() {
         Prefs.getInstance(getContext()).setString("USER", null);
         ((MainView) requireActivity()).route.transaction("LOGIN", LoginView.newInstance(), null);
+    }
+
+    @Override
+    public void setRefresh(boolean refresh) {
+        getBinding().swipe.setRefreshing(refresh);
     }
 }

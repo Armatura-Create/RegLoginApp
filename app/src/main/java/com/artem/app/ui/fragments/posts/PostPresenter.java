@@ -1,16 +1,13 @@
 package com.artem.app.ui.fragments.posts;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.artem.app.adapters.PostAdapter;
 import com.artem.app.api.ApiApp;
 import com.artem.app.api.RetrofitFactory;
-import com.artem.app.api.models.PostModel;
-import com.google.gson.Gson;
+import com.artem.app.api.models.PostsModel;
 
-import java.util.List;
+import java.util.Collections;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,22 +23,7 @@ public class PostPresenter implements PostContract.Presenter {
         this._view = _view;
         api = RetrofitFactory.getInstance().create("http://45.156.22.39:5000");
         adapter = new PostAdapter();
-
-        api.getPost().enqueue(new Callback<Object>() {
-            @Override
-            public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
-//                if (response.body() != null)
-                    Log.e("TAG_RESPONSE", new Gson().toJson(response.body()) );
-//                    adapter.setPosts(response.body());
-//                else
-//                    _view.toast("Error load");
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
-                _view.toast(t.getMessage());
-            }
-        });
+        onRefresh();
     }
 
     @Override
@@ -62,5 +44,29 @@ public class PostPresenter implements PostContract.Presenter {
     @Override
     public void logout() {
         _view.logout();
+    }
+
+    @Override
+    public void onRefresh() {
+        _view.setRefresh(true);
+        api.getPost().enqueue(new Callback<PostsModel>() {
+            @Override
+            public void onResponse(@NonNull Call<PostsModel> call, @NonNull Response<PostsModel> response) {
+                if (response.body() != null) {
+//                    Log.e("TAG_RESPONSE", new Gson().toJson(response.body()) );
+                    Collections.reverse(response.body().getTours());
+                    adapter.setPosts(response.body().getTours());
+                }
+                else
+                    _view.toast("Error load");
+                _view.setRefresh(false);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<PostsModel> call, @NonNull Throwable t) {
+                _view.toast(t.getMessage());
+                _view.setRefresh(false);
+            }
+        });
     }
 }
