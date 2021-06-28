@@ -48,6 +48,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             @Override
             public void onResponse(@NonNull Call<StatusModel> call, @NonNull Response<StatusModel> response) {
                 if (response.body().getStatus().equalsIgnoreCase("success")) {
+                    regLoginModel.setPermission(response.body().getPermission());
                     Prefs.getInstance(_view.getContext()).setString("USER", new Gson().toJson(regLoginModel));
                     _view.transactionPost();
                 }

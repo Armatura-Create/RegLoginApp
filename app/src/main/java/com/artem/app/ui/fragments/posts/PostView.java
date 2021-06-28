@@ -1,11 +1,13 @@
 package com.artem.app.ui.fragments.posts;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.artem.app.R;
+import com.artem.app.api.models.StatusModel;
 import com.artem.app.databinding.FragmentLoginBinding;
 import com.artem.app.databinding.FragmentPostsBinding;
 import com.artem.app.databinding.FragmentPostsBindingImpl;
@@ -16,6 +18,7 @@ import com.artem.app.ui.fragments.add.AddView;
 import com.artem.app.ui.fragments.login.LoginView;
 import com.artem.app.ui.fragments.reg.RegView;
 import com.artem.app.utils.Prefs;
+import com.google.gson.Gson;
 
 public class PostView extends FragmentBase<FragmentPostsBinding> implements PostContract.View {
 
@@ -43,6 +46,12 @@ public class PostView extends FragmentBase<FragmentPostsBinding> implements Post
         getBinding().rvPosts.setAdapter(presenter.getAdapter());
 
         getBinding().swipe.setOnRefreshListener(presenter);
+
+        StatusModel model = new Gson().fromJson(Prefs.getInstance(requireActivity()).getString("USER"), StatusModel.class);
+
+        if (model != null && model.getPermission().equalsIgnoreCase("1")) {
+            getBinding().btAdd.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
