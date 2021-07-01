@@ -45,8 +45,17 @@ public class AddPresenter implements AddContract.Presenter {
         PostModel model = new PostModel();
 
         model.setTitle(_view.getTitle());
-        model.setDescription(_view.getTitle());
-        model.setCost(_view.getTitle());
+        model.setDescription(_view.getDescription());
+
+        double cost = 0.0;
+
+        try {
+            cost = Double.parseDouble(_view.getCost());
+        } catch (Exception ignored){
+            _view.incorrectCost();
+        }
+
+        model.setCost("" + cost);
 
         api.sendPost(model).enqueue(new Callback<StatusModel>() {
             @Override
